@@ -128,12 +128,17 @@ class FortiOSDriver(NetworkDriver):
             policies = []
             for policy_fg in policies_vdom['results']:
                 log = ''
+                packet_hits = 0
+                byte_hits = 0
+                if policy_fg['policyid'] in policies_stats:
+                    packet_hits = policies_stats[policy_fg['policyid']]['software_packets']
+                    byte_hits = policies_stats[policy_fg['policyid']]['software_bytes']
                 if 'logtraffic' in policy_fg.keys():
                     log = policy_fg['logtraffic']
                 policies.append({
                     'position': position,
-                    'packet_hits': policies_stats[policy_fg['policyid']]['software_packets'],
-                    'byte_hits': policies_stats[policy_fg['policyid']]['software_bytes'],
+                    'packet_hits': packet_hits,
+                    'byte_hits': byte_hits,
                     'id': '{}'.format(policy_fg['policyid']),
                     'enabled': True,
                     'schedule': policy_fg['schedule'],
