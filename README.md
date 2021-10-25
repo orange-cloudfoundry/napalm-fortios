@@ -19,6 +19,6 @@ pip install git+https://github.com/orange-cloudfoundry/napalm-fortios.git@<relea
 you can use this new driver, example with napalm command line:
 
 ```
-napalm --user myuser --vendor fortios fg01.qfabric.rproxynet.m2.p.fti.net --optional_args "vdom=root" call get_firewall_policies
+napalm --user myuser --vendor fortios my-forti.fortigate.company.com --optional_args "vdom=root" call get_firewall_policies
 ```
 
