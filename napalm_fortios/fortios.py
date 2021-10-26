@@ -125,7 +125,6 @@ class FortiOSDriver(NetworkDriver):
         position = 1
         firewall_policies = {}
         for policies_vdom in policies_fg:
-            policies = []
             for policy_fg in policies_vdom['results']:
                 log = ''
                 packet_hits = 0
@@ -134,17 +133,18 @@ class FortiOSDriver(NetworkDriver):
                     packet_hits = policies_stats[policy_fg['policyid']]['software_packets']
                     byte_hits = policies_stats[policy_fg['policyid']]['software_bytes']
 
-                id = policy_fg['policyid']
+                name = policy_fg['policyid']
                 if 'name' in policy_fg.keys():
-                    id = policy_fg['name']
+                    name = policy_fg['name']
 
                 if 'logtraffic' in policy_fg.keys():
                     log = policy_fg['logtraffic']
-                policies.append({
+
+                firewall_policies['{}/{}'.format(policies_vdom['vdom'], name)] = [{
                     'position': position,
                     'packet_hits': packet_hits,
                     'byte_hits': byte_hits,
-                    'id': '{}'.format(id),
+                    'id': '{}'.format(policy_fg['policyid']),
                     'enabled': True,
                     'schedule': policy_fg['schedule'],
                     'log': log,
@@ -154,7 +154,6 @@ class FortiOSDriver(NetworkDriver):
                     'src_zone': ', '.join(list(map(lambda elem: elem['name'], policy_fg['srcintf']))),
                     'dst_zone': ', '.join(list(map(lambda elem: elem['name'], policy_fg['dstintf']))),
                     'action': policy_fg['action'],
-                })
+                }]
                 position += 1
-            firewall_policies[policies_vdom['vdom']] = policies
         return firewall_policies
