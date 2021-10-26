@@ -113,16 +113,24 @@ class FortiOSDriver(NetworkDriver):
         }
 
     def get_firewall_policies(self):
-        policies_fg_stats = self.device.monitor('firewall', 'policy', vdom=self.vdom,
-                                                parameters={'global': 1, 'exclude-default-values': 1})
+        params = {'exclude-default-values': 1}
+        if self.vdom is None:
+            params['global'] = 1
+        policies_fg_stats = self.device.monitor('firewall', 'policy', vdom=self.vdom, parameters=params)
         policies_stats = {}
+        # make single vdom response compatible with global multiple vdom response
+        if self.vdom is not None:
+            policies_fg_stats = [policies_fg_stats]
+
         for policies_fg_vdom_stats in policies_fg_stats:
             for stats in policies_fg_vdom_stats['results']:
                 policies_stats[stats['policyid']] = stats
 
-        policies_fg = self.device.get('firewall', 'policy', vdom=self.vdom,
-                                      parameters={'global': 1, 'exclude-default-values': 1})
+        policies_fg = self.device.get('firewall', 'policy', vdom=self.vdom, parameters=params)
         position = 1
+        # make single vdom response compatible with global multiple vdom response
+        if self.vdom is not None:
+            policies_fg = [policies_fg]
         firewall_policies = {}
         for policies_vdom in policies_fg:
             for policy_fg in policies_vdom['results']:

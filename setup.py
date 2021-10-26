@@ -6,7 +6,7 @@ __author__ = 'Arthur Halet <arthur.halet@orange.com>'
 
 setup(
     name="napalm-fortios",
-    version="0.2.0",
+    version="0.2.1",
     packages=find_packages(),
     author="Arthur Halet",
     author_email="arthur.halet@orange.com",
