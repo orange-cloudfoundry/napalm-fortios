@@ -165,3 +165,18 @@ class FortiOSDriver(NetworkDriver):
                 }]
                 position += 1
         return firewall_policies
+        
+    def get_config(self, retrieve="all", full=False, sanitized=False):
+        """Implementation of get_config for FortiOS.
+        Returns the running configuration as dictionary.
+        The startup and candidate is always empty string.
+        https://community.fortinet.com/t5/FortiGate/Technical-Tip-Get-backup-config-file-on-FortiGate-using-RestAPI/ta-p/202286
+        """
+        params = {
+            'scope': 'global'
+        }
+        return {
+            "running": self.device.download('system', 'config', vdom=self.vdom,mkey="backup", parameters=params),
+            "startup": "",
+            "candidate": ""
+        }
