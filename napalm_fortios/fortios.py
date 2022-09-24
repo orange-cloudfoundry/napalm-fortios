@@ -176,7 +176,7 @@ class FortiOSDriver(NetworkDriver):
             'scope': 'global'
         }
         return {
-            "running": self.device.download('system', 'config', vdom=self.vdom,mkey="backup", parameters=params),
+            "running": self.device.download('system', 'config', vdom=self.vdom,mkey="backup", parameters=params).text,
             "startup": "",
             "candidate": ""
         }
